@@ -1,0 +1,32 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".ui.main.MainActivity">
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_test"
+        android:title="@string/action_test"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/viewType"
+        android:icon="@drawable/ic_staggered_24dp"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/viewTypeForImage"
+        android:icon="@drawable/icon_list_32"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/changeItems"
+        android:icon="@drawable/icon_change"
+        app:showAsAction="always" />
+
+
+</menu>
