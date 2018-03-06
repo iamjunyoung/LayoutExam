@@ -36,6 +36,10 @@ public class MainActivity extends BaseActivity implements MainMvpView, ItemListe
 
     RecyclerView recyclerView;
     private SolventRecyclerViewAdapter rcAdapter;
+    // adapter 추가
+    private ListRecyclerViewAdapter lrAdapter;
+    private GridRecyclerViewAdapter grAdapter;
+
     //Bucket용 adapter추가
     private BucketItemRecyclerViewAdapter bucketAdapter;
 
@@ -210,18 +214,33 @@ public class MainActivity extends BaseActivity implements MainMvpView, ItemListe
 
             if (recyclerViewLayoutType == LAYOUT_TYPE_STAGGERED) {
                 recyclerViewLayoutType = LAYOUT_TYPE_LIST;
+
+                //List adpater필요
+                lrAdapter = new ListRecyclerViewAdapter(this);
+                recyclerView.setAdapter(lrAdapter);
+
                 layoutManager = new ItemLayoutManger(this);
                 iconInToolbar = R.drawable.ic_list_24dp;
                 viewType = "From Staggered to List";
             } else if (recyclerViewLayoutType == LAYOUT_TYPE_LIST) {
                 // List -> Grid
                 recyclerViewLayoutType = LAYOUT_TYPE_GRID;
+
+                //Grid adpater필요
+                grAdapter = new GridRecyclerViewAdapter(this);
+                recyclerView.setAdapter(grAdapter);
+
                 layoutManager = new GridLayoutManager(this, 2);
                 iconInToolbar = R.drawable.ic_grid_24dp;
                 viewType = "From List to Grid";
             } else if (recyclerViewLayoutType == LAYOUT_TYPE_GRID) {
                 // Grid -> Staggered
                 recyclerViewLayoutType = LAYOUT_TYPE_STAGGERED;
+
+                //Solvent adpater필요
+                rcAdapter = new SolventRecyclerViewAdapter(this);
+                recyclerView.setAdapter(rcAdapter);
+
                 StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
                 staggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
                 layoutManager = staggeredGridLayoutManager;
@@ -229,6 +248,11 @@ public class MainActivity extends BaseActivity implements MainMvpView, ItemListe
                 viewType = "From Grid to Staggered";
             } else {
                 recyclerViewLayoutType = LAYOUT_TYPE_STAGGERED;
+
+                //Solvent adpater필요
+                rcAdapter = new SolventRecyclerViewAdapter(this);
+                recyclerView.setAdapter(rcAdapter);
+
                 StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
                 staggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
                 layoutManager = staggeredGridLayoutManager;
@@ -236,7 +260,11 @@ public class MainActivity extends BaseActivity implements MainMvpView, ItemListe
                 viewType = "[else] ... to Staggered";
             }
             item.setIcon(iconInToolbar);
-            rcAdapter.notifyDataSetChanged();
+
+            presenter.createSamples();
+            presenter.loadItemList();
+
+            //rcAdapter.notifyDataSetChanged();
             recyclerView.setLayoutManager(layoutManager);
             Toast.makeText(this, "ViewType : " + viewType, Toast.LENGTH_SHORT).show();
             return true;
@@ -264,8 +292,25 @@ public class MainActivity extends BaseActivity implements MainMvpView, ItemListe
 
     @Override
     public void onUpdateItemList(List<ItemObjects> itemList) {
-        rcAdapter.clear();
-        rcAdapter.addItems(itemList);
+        String viewType = null;
+        if (recyclerViewLayoutType == LAYOUT_TYPE_STAGGERED) {
+            rcAdapter.clear();
+            rcAdapter.addItems(itemList);
+            viewType = "From Staggered to List";
+        } else if (recyclerViewLayoutType == LAYOUT_TYPE_LIST) {
+            lrAdapter.clear();
+            lrAdapter.addItems(itemList);
+            viewType = "From List to Grid";
+        } else if (recyclerViewLayoutType == LAYOUT_TYPE_GRID) {
+            grAdapter.clear();
+            grAdapter.addItems(itemList);
+            viewType = "From Grid to Staggered";
+        } else {
+            rcAdapter.clear();
+            rcAdapter.addItems(itemList);
+            viewType = "[else] ... to Staggered";
+        }
+
         emptyView.setVisibility(View.GONE);
     }
 

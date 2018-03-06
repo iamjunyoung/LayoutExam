@@ -25,7 +25,8 @@ public class ImageItemManager {
 
     public static void createImageItems() {
         listViewItems = new ArrayList<>();
-        listViewItems.add(new ItemObjects(0, "Alkane", R.drawable.one));
+        //listViewItems.add(new ItemObjects(0, "Alkane", R.drawable.one));
+        listViewItems.add(new ItemObjects(0, "+", R.drawable.one));
         listViewItems.add(new ItemObjects(1, "Ethane", R.drawable.two));
         listViewItems.add(new ItemObjects(2, "Alkyne", R.drawable.three));
         listViewItems.add(new ItemObjects(3, "Benzene", R.drawable.four));

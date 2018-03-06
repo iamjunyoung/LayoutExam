@@ -12,13 +12,20 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
+        <ImageView
+            android:id="@+id/country_photo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/action_settings"
+            android:adjustViewBounds="true"
+            />
+        <!-- android:scaleType="centerCrop" -->
         <TextView
             android:id="@+id/country_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="13sp"
-            android:text="@string/add_new_folder"
+            android:text="@string/hello_world"
             android:textColor="#ffffff"
             android:layout_below="@+id/country_photo"
             android:paddingBottom="8dp"

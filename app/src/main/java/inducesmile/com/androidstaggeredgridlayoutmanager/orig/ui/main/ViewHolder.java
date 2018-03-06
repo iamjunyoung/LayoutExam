@@ -1,5 +1,6 @@
 package inducesmile.com.androidstaggeredgridlayoutmanager.orig.ui.main;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.datas.ItemObjects;
@@ -10,5 +11,5 @@ import inducesmile.com.androidstaggeredgridlayoutmanager.orig.datas.ItemObjects;
 
 public abstract class ViewHolder extends RecyclerView.ViewHolder {
     public ViewHolder(View itemView) { super(itemView); }
-    abstract void bind(ItemObjects item);
+    abstract void bind(Context context, ItemObjects item);
 }

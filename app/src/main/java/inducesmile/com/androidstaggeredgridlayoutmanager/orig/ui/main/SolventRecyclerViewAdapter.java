@@ -24,7 +24,8 @@ import static inducesmile.com.androidstaggeredgridlayoutmanager.orig.ui.main.Sol
 
 
 //class와 public class의 차이?
-class SolventRecyclerViewAdapter  extends RecyclerView.Adapter<SolventViewHolders>
+//class SolventRecyclerViewAdapter  extends RecyclerView.Adapter<SolventViewHolders>
+class SolventRecyclerViewAdapter  extends RecyclerView.Adapter<ViewHolder>
         implements ItemTouchHelperListener {
     public static final int VIEW_TYPE_NORMAL = 0;
     public static final int VIEW_TYPE_FIRST = 1;
@@ -57,39 +58,33 @@ class SolventRecyclerViewAdapter  extends RecyclerView.Adapter<SolventViewHolder
     //SolventRecyclerViewAdapter.java 내부에서 아래와 같이 분기를 만들 수 밖에 없다...
     //그렇다면 각각의 adapter를 따로 만들면 어떨까?
     // + item에 type을 설명하는 변수를 추가하여 getItemViewType을 통해 itemType별로 view를 보여줄 수 있게 한다.
+
+
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //public SolventViewHolders onCreateViewHolder(ViewGroup parent, int viewType) {
+
         int resId = ViewHolderFactory.getItemLayoutId(viewType);
         View view = LayoutInflater.from(context).inflate(resId, parent, false);
-        return ViewHolderFactory.getViewHolder(viewType, view);
 
-        /*
-        //SolventViewHolders rcv;
-        if (MainActivity.recyclerViewLayoutType == MainActivity.LAYOUT_TYPE_STAGGERED) {
-            layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_staggered, null);
-        } else if (MainActivity.recyclerViewLayoutType == MainActivity.LAYOUT_TYPE_LIST) {
-            layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list, null);
-        } else if (MainActivity.recyclerViewLayoutType == MainActivity.LAYOUT_TYPE_GRID) {
-            layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grid, null);
+        if (viewType == VIEW_TYPE_NORMAL) {
+            Log.i("gggg", "hi ");
+            return new SolventViewHolders(view);
+        } else {
+            Log.i("gggg", "hi FirstItemViewHolders ");
+            return new FirstItemViewHolders(view);
         }
 
-        else if (MainActivity.recyclerViewLayoutType == MainActivity.LAYOUT_TYPE_IMAGE_LIST) { // list
-            layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_for_image, null);
-        } else if (MainActivity.recyclerViewLayoutType == MainActivity.LAYOUT_TYPE_IMAGE_GRID_2) { // griad x2
-            layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_for_image, null);
-            //layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grid_for_image, null);
-        } else { //(MainActivity.recyclerViewLayoutType == MainActivity.LAYOUT_TYPE_IMAGE_GRID_3) { // grid x3
-            layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_for_image, null);
-            //layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grid_for_image, null);
-        }*/
-
-        //return new SolventViewHolders(layoutView);
     }
+
+
 
     @Override
     public int getItemViewType(int position) {
-        return MainActivity.recyclerViewLayoutType;
+        if (position == 0) return VIEW_TYPE_FIRST;
+            else return VIEW_TYPE_NORMAL;
+        //return MainActivity.recyclerViewLayoutType;
         //return super.getItemViewType(position);
 
         //아래와 같은 방법이 어떨까??
@@ -98,84 +93,19 @@ class SolventRecyclerViewAdapter  extends RecyclerView.Adapter<SolventViewHolder
 
 
     @Override
-    public void onBindViewHolder(final SolventViewHolders holder, int position) {
-        //Log.i(TAG, "onBindViewHolder. position : " + position + "    title : " + itemList.get(position).getName());
+    public void onBindViewHolder(final ViewHolder holder, int position) {
+        holder.bind(context, itemList.get(position));
 
-
-        holder.countryName.setText(itemList.get(position).getName());
-
-
-        // Replace this to Glide
-        //holder.countryPhoto.setImageResource(itemList.get(position).getPhoto());
-        //holder.countryPhoto.setImageBitmap(resize(itemList.get(position).getPhoto()));
-
-        /*
-        if (itemList.get(position).getHeight() != -1) {
-            ViewGroup.LayoutParams layoutParams = holder.countryPhoto.getLayoutParams();
-            layoutParams.height = itemList.get(position).getHeight();
-            holder.countryPhoto.setLayoutParams(layoutParams);
-        }*/
-
-        Glide.with(context)
-                .load(itemList.get(position).getPhoto())
-                .into(holder.countryPhoto);
-
-
-        /*
-        if (itemList.get(position).getHeight() == -1) {
-            itemList.get(position).setHeight(holder.countryPhoto.getHeight());
-        }*/
-
-
-        Log.i(TAG, "onBindViewHolder pos : " + position + "    title : " + itemList.get(position).getName()
-                + "    height : " + holder.countryPhoto.getHeight() + "    tag : " + holder.countryPhoto.getTag());
-
-        //출처: http://itpangpang.xyz/243 [ITPangPang]
-
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                //int holderPosition = ((SolventViewHolders) v.getTag()).getAdapterPosition();
-                int holderPosition = holder.getAdapterPosition();
-                Log.i("JYN", "Category : " + itemList.get(holderPosition).getName() + " 's itemView is long clicked");
-                Toast.makeText(context, "Long clicked item = " + itemList.get(holderPosition).getName(), Toast.LENGTH_SHORT).show();
-
-
-                //우명인 예제 코드와 같이
-                //onLongClieded, onClicked 이벤트 발생시에
-                //이 부분에서 ItemListener (인터페이스)의 api를 호출하도록 하자
-                //결과적으로 MainActivity와의 comm이 이 방식으로 이루어 진다.
-                //괜찮은 방법 같다.
-
-                /*
-                // JYN for multi select
-                if (!((MainActivity) context).getLongTouched()) { //long touch상태가 아닌 경우(default)
-                    Log.i("JYN", "set isMultiSelect to true");
-                    ((MainActivity) context).setLongTouched(true);
-                    //longTouchSelectedItems.add(visibleItems.get(holderPosition).getTitle());
-                } else {                                          //long touch상태인 경우
-                    //Log.i("JYN", "set isMultiSelect to false");
-                    //((MainActivity)mContext).setLongTouched(false);
-                    //longTouchSelectedItems.remove(visibleItems.get(holderPosition).getTitle());
-                }
-                */
-
-                //longTouchSelectedItems.add(visibleItems.get(holderPosition).getTitle());
-                //notifyItemChanged(holderPosition);
-
-                return true;
+        if (holder instanceof SolventViewHolders) {
+            if (((SolventViewHolders) holder).countryPhoto == null) {
+                Log.i("gggg", "hi countryPhoto ");
             }
-        });
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //int holderPosition = ((SolventViewHolders) v.getTag()).getAdapterPosition();
-                int holderPosition = holder.getAdapterPosition();
-                Toast.makeText(context, "Clicked item = " + itemList.get(holderPosition).getName(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
+            /*
+            Glide.with(context)
+                    .load(itemList.get(position).getPhoto())
+                   .into(((SolventViewHolders) holder).countryPhoto);
+                   */
+        }
     }
 
     private Bitmap resize(int image) {
@@ -200,7 +130,7 @@ class SolventRecyclerViewAdapter  extends RecyclerView.Adapter<SolventViewHolder
     ////////
 
     //public void addItems(List<ItemObjects> list) {
-    public void addItems(List list) {
+    public void addItems(List<ItemObjects> list) {
         itemList.addAll(list);
         notifyDataSetChanged();
     }
@@ -245,36 +175,7 @@ class SolventRecyclerViewAdapter  extends RecyclerView.Adapter<SolventViewHolder
             return false;
         }
 
-        /*
-        if (fromPosition == 0 && ( toPosition == 1 | toPosition == 2 | toPosition ==3)) {
-            temp = 0;
-        }
-        if (( fromPosition == 1 | fromPosition == 2 | fromPosition ==3) && temp == 0) {
-            temp = -1;
-            Log.i(TAG, "onItemMove. hihi case");
-            return false;
-        }
-        */
-        /*
-        if (fromPosition == 0) {
-            Log.i(TAG, "onItemMove. hihi case");
-            toPosition = 1;
-            ItemObjects fromItem = itemList.get(0);
-
-            itemList.remove(fromPosition);
-            itemList.add(toPosition, fromItem);
-
-            notifyItemMoved(fromPosition, toPosition);
-        }*/
-
         ItemObjects fromItem = itemList.get(fromPosition);
-
-        /*
-        itemList.remove(fromPosition);
-        itemList.add(toPosition, fromItem);
-
-        notifyItemMoved(fromPosition, toPosition);
-        */
 
 
         if (fromPosition < toPosition) {
@@ -326,16 +227,13 @@ class SolventRecyclerViewAdapter  extends RecyclerView.Adapter<SolventViewHolder
 
 class ViewHolderFactory {
     public static int getItemLayoutId(int type) {
-        int resId;
-        if (type == VIEW_TYPE_FIRST) { resId = R.layout.item_staggered_first; }
-        else { resId = R.layout.item_staggered; }
-        return resId;
+        if (type == VIEW_TYPE_FIRST) return R.layout.item_staggered_first;
+        else return R.layout.item_staggered;
     }
+    /*
     public static ViewHolder getViewHolder(int type, View itemView) {
-        if (type == VIEW_TYPE_FIRST) {
-            return new FirstItemViewHolders(itemView);
-        } else {
-            return new SolventViewHolders(itemView);
-        }
+        if (type == VIEW_TYPE_FIRST) return new FirstItemViewHolders(itemView);
+        else return new SolventViewHolders(itemView);
     }
+    */
 }
