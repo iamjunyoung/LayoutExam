@@ -1,10 +1,13 @@
 package inducesmile.com.androidstaggeredgridlayoutmanager.orig.ui.main;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.ViewHolder;
+import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.model.DataModel;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.common.BaseMvpView;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.common.RxPresenter;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.data.BucketData;
@@ -23,6 +26,12 @@ public class MainMvpPresenterImpl <MvpView extends BaseMvpView> extends RxPresen
         implements MainMvpPresenter<MvpView> {
 
     private MainMvpView view; //view를 갖고있다.
+    DataModel dataModel;
+    //Adpapter의 종류가 바뀌어야 할 때,
+    //MainActivity쪽에서 MainMvpPresenter쪽으로 dataModel이 바뀌었음을 메서드?등을 통해 알려주어야 할까? (switchAdapter()가 MainActivity로부터 호출된다든지...)
+    //3가지 adpater가 변경되면서 set될 수가 있는 상황인데 이를 어떻게 처리하는 것이 좋을까?
+
+    //Presenter는 SolventDataModel을 갖고있어야 겠다 (adpaterDatapModel)
 
     private PublishSubject<String> searchTextChangeSubject = PublishSubject.create();
 
@@ -116,6 +125,14 @@ public class MainMvpPresenterImpl <MvpView extends BaseMvpView> extends RxPresen
         } else {
             view.onUpdateBucketItemList(bItemList); // --> 이후 onUpdateBucketItemList 에서는 adapter.addItems(itemList);를 해주게 됨.
         }
+    }
+
+    @Override
+    public void switchAdapter(RecyclerView.Adapter<ViewHolder> recyclerViewAdapter) {
+        //사용자가 view종류를 바꿀 때마다,
+        //MainActivity쪽에서는 이 switchAdapter()를 호출하여
+        //Presenter쪽으로 Adpater의 종류가 바뀌어야 함을 알려주고
+        //Presenter쪽에서는 관련된 동작을 수행해 주고, DataModel의 종류또한 Adapter와 맞게 바꿔준다.
     }
 
     //Q. 근데 왜 MainMvpPresenter와 MainMvpPresenterImpl을 나눴을까?

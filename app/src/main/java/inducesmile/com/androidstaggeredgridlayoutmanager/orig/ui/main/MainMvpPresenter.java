@@ -1,7 +1,9 @@
 package inducesmile.com.androidstaggeredgridlayoutmanager.orig.ui.main;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 
+import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.ViewHolder;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.common.BaseMvpPresenter;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.common.BaseMvpView;
 
@@ -25,4 +27,6 @@ public interface MainMvpPresenter <MvpView extends BaseMvpView> extends BaseMvpP
     void loadBucketItemList(Context context);
 
     void loadImagesItemListInBucket(Context context, String findDirName);
+
+    void switchAdapter(RecyclerView.Adapter<ViewHolder> recyclerViewAdapter);
 }

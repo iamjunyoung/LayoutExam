@@ -18,6 +18,7 @@ import java.util.List;
 
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.ItemTouchHelperListener;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.R;
+import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.SolventViewHolders;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.datas.BucketItemObject;
 
 //class와 public class의 차이?

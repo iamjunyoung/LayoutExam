@@ -1,4 +1,4 @@
-package inducesmile.com.androidstaggeredgridlayoutmanager.orig.ui.main;
+package inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

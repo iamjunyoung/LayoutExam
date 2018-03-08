@@ -1,4 +1,4 @@
-package inducesmile.com.androidstaggeredgridlayoutmanager.orig.ui.main;
+package inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -15,14 +15,15 @@ import java.util.List;
 
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.ItemTouchHelperListener;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.R;
+import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.model.SolventDataModel;
+import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.view.SolventAdapterView;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.datas.ItemObjects;
 
-/**
- * Created by user on 2018-03-06.
- */
 
-public class GridRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder>
-        implements ItemTouchHelperListener {
+//class와 public class의 차이?
+//class SolventRecyclerViewAdapter  extends RecyclerView.Adapter<SolventViewHolders>
+public class SolventRecyclerViewAdapter  extends RecyclerView.Adapter<ViewHolder>
+        implements SolventDataModel, SolventAdapterView, ItemTouchHelperListener {
     public static final int VIEW_TYPE_NORMAL = 0;
     public static final int VIEW_TYPE_FIRST = 1;
 
@@ -33,46 +34,82 @@ public class GridRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder>
     private Context context;
     private String TAG = "Solvent";
 
-    public GridRecyclerViewAdapter(Context context, List<ItemObjects> itemList) {
+    public SolventRecyclerViewAdapter(Context context, List<ItemObjects> itemList) {
         this.itemList = itemList;
         this.context = context;
     }
 
     // Added by JY
     // 왜 TodoListener 라는 형태로 만들었을까? (예제앱은)
-    public GridRecyclerViewAdapter(Context context) {
+    public SolventRecyclerViewAdapter(Context context) {
         this.context = context;
         itemList = new ArrayList<>();
     }
 
+    // 아래처럼 하지말고.. 왜냐면 아래처럼 쓰는 건 getItemViewType()을 통해 구분해서 view를 보여주는 방식과 좀 어긋나는 것 같기 때문이다.
+    //item각각의 type, itemViewtype()으로 보여주는 방식을 결정하는 것인데
+    //아래는 MainActivity에 있는 전역적인 변수로 구분하여 보여주는 방식을 결정하는 것이기 때문이다.
+    //중요한 포인트는,
+    //내가 하고있는 grid <-> list <-> staggered 변경시에 Adapter도 별개로 써야 하느냐 마느냐는 것이다.
+    //현재 아래와 같이 구현한 이유는 view종류 변경시 Adapter를 동일한 하나를 사용하고 있기 때문에
+    //SolventRecyclerViewAdapter.java 내부에서 아래와 같이 분기를 만들 수 밖에 없다...
+    //그렇다면 각각의 adapter를 따로 만들면 어떨까?
+    // + item에 type을 설명하는 변수를 추가하여 getItemViewType을 통해 itemType별로 view를 보여줄 수 있게 한다.
+
+
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = null;
+        //public SolventViewHolders onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        int resId = ViewHolderFactory.getItemLayoutId(viewType);
+        View view = LayoutInflater.from(context).inflate(resId, parent, false);
 
         if (viewType == VIEW_TYPE_NORMAL) {
             Log.i("gggg", "hi ");
-            view = LayoutInflater.from(context).inflate(R.layout.item_grid, parent, false);
             return new SolventViewHolders(view);
         } else {
             Log.i("gggg", "hi FirstItemViewHolders ");
-            view = LayoutInflater.from(context).inflate(R.layout.item_staggered_first, parent, false);
             return new FirstItemViewHolders(view);
         }
+
     }
+
+
 
     @Override
     public int getItemViewType(int position) {
         if (position == 0) return VIEW_TYPE_FIRST;
-        else return VIEW_TYPE_NORMAL;
+            else return VIEW_TYPE_NORMAL;
+        //return MainActivity.recyclerViewLayoutType;
+        //return super.getItemViewType(position);
+
+        //아래와 같은 방법이 어떨까??
+        //return getItem(position).getType();
     }
 
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.bind(context, itemList.get(position));
+
+        if (holder instanceof SolventViewHolders) {
+            if (((SolventViewHolders) holder).countryPhoto == null) {
+                Log.i("gggg", "hi countryPhoto ");
+            }
+            /*
+            Glide.with(context)
+                    .load(itemList.get(position).getPhoto())
+                   .into(((SolventViewHolders) holder).countryPhoto);
+                   */
+        }
     }
 
     private Bitmap resize(int image) {
+        //Bitmap b = ((BitmapDrawable)image).getBitmap();
+        //Bitmap bitmapResized = Bitmap.createScaledBitmap(b, 100, 100, false);
+        //return new BitmapDrawable(context.getResources(), bitmapResized);
+
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 2;
         //출처: http://aroundck.tistory.com/59 [돼지왕 왕돼지 놀이터]
@@ -89,9 +126,40 @@ public class GridRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder>
     // For MVP
     ////////
 
+    void addItem(ItemObjects itemObjects) {
+        itemList.add(itemObjects);
+        notifyItemInserted(itemList.size() - 1);
+    }
+
+    @Override
+    public void add(ItemObjects itemObjects) {
+        itemList.add(itemObjects);
+    }
+
+    @Override
+    public ItemObjects remove(int position) {
+        return itemList.remove(position);
+    }
+
+    @Override
+    public ItemObjects getPhoto(int position) {
+        return itemList.get(position);
+    }
+
     //public void addItems(List<ItemObjects> list) {
     public void addItems(List<ItemObjects> list) {
         itemList.addAll(list);
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public int getSize() {
+        return 0;
+    }
+
+
+    @Override
+    public void refresh() {
         notifyDataSetChanged();
     }
 
@@ -106,10 +174,6 @@ public class GridRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder>
         notifyItemChanged(position);
     }
 
-    void addItem(ItemObjects itemObjects) {
-        itemList.add(itemObjects);
-        notifyItemInserted(itemList.size() - 1);
-    }
 
     void removeItem(ItemObjects itemObjects) {
         itemList.remove(itemObjects);
@@ -148,6 +212,20 @@ public class GridRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder>
             }
         }
         notifyItemMoved(fromPosition, toPosition);
+        //출처: http://fullstatck.tistory.com/15 [풀스택 엔지니어]
+
+
+
+        /*
+        Collections.swap(itemList, fromPosition, toPosition);
+        notifyItemMoved(fromPosition, toPosition);
+        */
+
+        /*
+        for(int i = 0; i < itemList.size(); i++){
+            Log.i(TAG, "onItemMove : "+itemList.get(i).getName());
+        }*/
+
 
         return true;
     }
@@ -161,6 +239,7 @@ public class GridRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder>
 
         //과연 아래 방법 말고는 없는가..
         //notifyDataSetChanged();
+
     }
 
     @Override
@@ -168,4 +247,17 @@ public class GridRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder>
         Log.i("JYN", "onItemSwipe. item : "+itemList.get(position).getName());
 
     }
+}
+
+class ViewHolderFactory {
+    public static int getItemLayoutId(int type) {
+        if (type == SolventRecyclerViewAdapter.VIEW_TYPE_FIRST) return R.layout.item_staggered_first;
+        else return R.layout.item_staggered;
+    }
+    /*
+    public static ViewHolder getViewHolder(int type, View itemView) {
+        if (type == VIEW_TYPE_FIRST) return new FirstItemViewHolders(itemView);
+        else return new SolventViewHolders(itemView);
+    }
+    */
 }

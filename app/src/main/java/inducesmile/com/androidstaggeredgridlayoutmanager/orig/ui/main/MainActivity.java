@@ -19,6 +19,9 @@ import java.util.List;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.ItemLayoutManger;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.ItemTouchHelperCallback;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.R;
+import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.SolventRecyclerViewAdapter;
+import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.GridRecyclerViewAdapter;
+import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.ListRecyclerViewAdapter;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.common.BaseActivity;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.datas.BucketItemObject;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.datas.ItemObjects;
@@ -228,6 +231,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, ItemListe
 
                 //Grid adpater필요
                 grAdapter = new GridRecyclerViewAdapter(this);
+                //Presenter에게 Adapter의 종류가 바뀌었음을 알려줘야 하지 않을까?
+                //즉. Presenter.java쪽에 switchAdapter() 등의 메서드가 추가되어야 하지 않을까??
                 recyclerView.setAdapter(grAdapter);
 
                 layoutManager = new GridLayoutManager(this, 2);
