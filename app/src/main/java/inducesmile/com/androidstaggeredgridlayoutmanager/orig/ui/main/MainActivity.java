@@ -88,6 +88,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, ItemListe
         //
         bucketAdapter = new BucketItemRecyclerViewAdapter(this);
 
+        presenter.setImageAdapterModel(rcAdapter);
+        presenter.setImageAdapterView(rcAdapter);
         presenter.createSamples();
         presenter.loadItemList();
 
@@ -321,7 +323,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, ItemListe
 
     @Override
     public void onCreatedItem(ItemObjects itemObjects) {
-        rcAdapter.addItem(itemObjects);
+        rcAdapter.add(itemObjects);
     }
 
     @Override

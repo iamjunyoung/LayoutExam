@@ -15,15 +15,13 @@ import java.util.List;
 
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.ItemTouchHelperListener;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.R;
-import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.model.SolventDataModel;
-import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.view.SolventAdapterView;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.datas.ItemObjects;
 
 
 //class와 public class의 차이?
 //class SolventRecyclerViewAdapter  extends RecyclerView.Adapter<SolventViewHolders>
 public class SolventRecyclerViewAdapter  extends RecyclerView.Adapter<ViewHolder>
-        implements SolventDataModel, SolventAdapterView, ItemTouchHelperListener {
+        implements AdapterContract.Model, AdapterContract.View, ItemTouchHelperListener {
     public static final int VIEW_TYPE_NORMAL = 0;
     public static final int VIEW_TYPE_FIRST = 1;
 
@@ -56,8 +54,6 @@ public class SolventRecyclerViewAdapter  extends RecyclerView.Adapter<ViewHolder
     //그렇다면 각각의 adapter를 따로 만들면 어떨까?
     // + item에 type을 설명하는 변수를 추가하여 getItemViewType을 통해 itemType별로 view를 보여줄 수 있게 한다.
 
-
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //public SolventViewHolders onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -74,8 +70,6 @@ public class SolventRecyclerViewAdapter  extends RecyclerView.Adapter<ViewHolder
         }
 
     }
-
-
 
     @Override
     public int getItemViewType(int position) {
@@ -122,46 +116,56 @@ public class SolventRecyclerViewAdapter  extends RecyclerView.Adapter<ViewHolder
         return this.itemList.size();
     }
 
-    /////////
-    // For MVP
-    ////////
-
-    void addItem(ItemObjects itemObjects) {
-        itemList.add(itemObjects);
-        notifyItemInserted(itemList.size() - 1);
-    }
-
+    /////////////////////////////
+    //////// For MVP
+    /////////////////////////////
     @Override
     public void add(ItemObjects itemObjects) {
-        itemList.add(itemObjects);
+
     }
 
     @Override
     public ItemObjects remove(int position) {
-        return itemList.remove(position);
+        ItemObjects io = itemList.get(position);
+        itemList.remove(position);
+        return io;
     }
 
     @Override
     public ItemObjects getPhoto(int position) {
-        return itemList.get(position);
+        return null;
     }
 
-    //public void addItems(List<ItemObjects> list) {
+    @Override
     public void addItems(List<ItemObjects> list) {
-        itemList.addAll(list);
-        notifyDataSetChanged();
+
     }
 
     @Override
     public int getSize() {
         return 0;
     }
+    //////////////////////////////////////////////////
+    @Override
+    public void refreshItemList() {
 
+    }
 
     @Override
-    public void refresh() {
-        notifyDataSetChanged();
+    public void refreshItemAdded(int position) {
+
     }
+
+    @Override
+    public void refreshItemRemoved(int position) {
+        notifyItemRemoved(position);
+    }
+
+    @Override
+    public void refreshItemChanged(int position) {
+
+    }
+    //////////////////////////////////////
 
     void update(int itemId) {
         int position = -1;
@@ -181,7 +185,7 @@ public class SolventRecyclerViewAdapter  extends RecyclerView.Adapter<ViewHolder
         notifyItemRemoved(itemList.indexOf(itemObjects));
     }
 
-    void clear() {
+    public void clear() {
         itemList.clear();
         notifyDataSetChanged();
     }
@@ -225,21 +229,15 @@ public class SolventRecyclerViewAdapter  extends RecyclerView.Adapter<ViewHolder
         for(int i = 0; i < itemList.size(); i++){
             Log.i(TAG, "onItemMove : "+itemList.get(i).getName());
         }*/
-
-
         return true;
     }
 
     @Override
     public void onItemRemove(int position) {
         Log.i(TAG, "onItemRemove. pos : " + position + "    item : "+itemList.get(position).getName());
-
+        //아래 두 line도 MVP고려해야되는가?
         itemList.remove(position);
         notifyItemRemoved(position);
-
-        //과연 아래 방법 말고는 없는가..
-        //notifyDataSetChanged();
-
     }
 
     @Override

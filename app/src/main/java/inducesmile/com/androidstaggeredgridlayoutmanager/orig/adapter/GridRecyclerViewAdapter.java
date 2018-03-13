@@ -15,10 +15,6 @@ import java.util.List;
 
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.ItemTouchHelperListener;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.R;
-import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.model.GridDataModel;
-import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.model.SolventDataModel;
-import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.view.GridAdapterView;
-import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.view.SolventAdapterView;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.datas.ItemObjects;
 
 /**
@@ -26,7 +22,7 @@ import inducesmile.com.androidstaggeredgridlayoutmanager.orig.datas.ItemObjects;
  */
 
 public class GridRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder>
-        implements GridDataModel, GridAdapterView, ItemTouchHelperListener {
+        implements AdapterContract.Model, AdapterContract.View, ItemTouchHelperListener {
     public static final int VIEW_TYPE_NORMAL = 0;
     public static final int VIEW_TYPE_FIRST = 1;
 
@@ -141,7 +137,7 @@ public class GridRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder>
         notifyItemRemoved(itemList.indexOf(itemObjects));
     }
 
-    void clear() {
+    public void clear() {
         itemList.clear();
         notifyDataSetChanged();
     }
@@ -193,8 +189,24 @@ public class GridRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder>
 
     }
 
+
     @Override
-    public void refresh() {
+    public void refreshItemList() {
+
+    }
+
+    @Override
+    public void refreshItemAdded() {
+
+    }
+
+    @Override
+    public void refreshItemRemoved() {
+
+    }
+
+    @Override
+    public void refreshItemChanged() {
 
     }
 }

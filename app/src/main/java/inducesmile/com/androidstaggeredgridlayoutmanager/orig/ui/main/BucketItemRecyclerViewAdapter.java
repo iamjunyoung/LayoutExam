@@ -287,8 +287,6 @@ class BucketItemRecyclerViewAdapter extends RecyclerView.Adapter<SolventViewHold
         for(int i = 0; i < itemList.size(); i++){
             Log.i(TAG, "onItemMove : "+itemList.get(i).getName());
         }*/
-
-
         return true;
     }
 

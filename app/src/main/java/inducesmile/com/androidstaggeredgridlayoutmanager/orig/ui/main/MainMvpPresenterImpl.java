@@ -6,8 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.AdapterContract;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.ViewHolder;
-import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.model.DataModel;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.common.BaseMvpView;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.common.RxPresenter;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.data.BucketData;
@@ -26,7 +26,10 @@ public class MainMvpPresenterImpl <MvpView extends BaseMvpView> extends RxPresen
         implements MainMvpPresenter<MvpView> {
 
     private MainMvpView view; //view를 갖고있다.
-    DataModel dataModel;
+
+    private AdapterContract.Model adapterModel;
+    private AdapterContract.View adapterView;
+
     //Adpapter의 종류가 바뀌어야 할 때,
     //MainActivity쪽에서 MainMvpPresenter쪽으로 dataModel이 바뀌었음을 메서드?등을 통해 알려주어야 할까? (switchAdapter()가 MainActivity로부터 호출된다든지...)
     //3가지 adpater가 변경되면서 set될 수가 있는 상황인데 이를 어떻게 처리하는 것이 좋을까?
@@ -80,6 +83,7 @@ public class MainMvpPresenterImpl <MvpView extends BaseMvpView> extends RxPresen
         //http://programmingfbf7290.tistory.com/
     }
 
+    
     @Override
     public void destroy() {
 
@@ -97,11 +101,26 @@ public class MainMvpPresenterImpl <MvpView extends BaseMvpView> extends RxPresen
     }
 
     @Override
-    public void insert(String title) {
+    public void addItem(String title) {
         ItemObjects itemObjects = ItemManager.createItem(title);
-        view.onCreatedItem(itemObjects);
+        adapterModel.add(itemObjects);  //이런식으로 adapter의 dataModel에게 addItem을 해주고
+        view.onCreatedItem(itemObjects); // view 에도 마찬가지로 addItem 동작을 해준다.
     }
 
+    //https://github.com/ZeroBrain/Android-MVP-AdapterRoleSample/blob/master/app/src/main/java/com/nobrain/samples/adapterrolesample/main/presenter/MainPresenterImpl.java
+    //위 예제 코드에서 처럼
+    //Presenter에서 무언가 동작을 하면
+    // 1) adatper Data Model 쪽으로 메서드 호출
+    // 2) view쪽으로 메서드 호출
+    //    ->view(MainActivity)에서는 adpater view 쪽으로 메서드 호출
+    /*
+    @Override
+    public void removePhoto(int position) {
+        photoDataModel.remove(position);
+        view.refresh();
+    }
+    */
+    
     @Override
     public void createSamples() {
         ItemManager.createSampleItems();
@@ -133,6 +152,16 @@ public class MainMvpPresenterImpl <MvpView extends BaseMvpView> extends RxPresen
         //MainActivity쪽에서는 이 switchAdapter()를 호출하여
         //Presenter쪽으로 Adpater의 종류가 바뀌어야 함을 알려주고
         //Presenter쪽에서는 관련된 동작을 수행해 주고, DataModel의 종류또한 Adapter와 맞게 바꿔준다.
+    }
+
+    @Override
+    public void setImageAdapterModel(AdapterContract.Model adapterModel) {
+        this.adapterModel = adapterModel;
+    }
+
+    @Override
+    public void setImageAdapterView(AdapterContract.View adapterView) {
+        this.adapterView = adapterView;
     }
 
     //Q. 근데 왜 MainMvpPresenter와 MainMvpPresenterImpl을 나눴을까?

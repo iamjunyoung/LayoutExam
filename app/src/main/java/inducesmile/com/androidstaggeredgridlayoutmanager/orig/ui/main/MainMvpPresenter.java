@@ -3,6 +3,7 @@ package inducesmile.com.androidstaggeredgridlayoutmanager.orig.ui.main;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
+import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.AdapterContract;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.ViewHolder;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.common.BaseMvpPresenter;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.common.BaseMvpView;
@@ -18,7 +19,7 @@ public interface MainMvpPresenter <MvpView extends BaseMvpView> extends BaseMvpP
     // 이때 Presenter의 loadItemList()를 호출한다.
     void loadItemList();
 
-    void insert(String title);
+    void addItem(String title);
 
     void createSamples();
 
@@ -29,4 +30,8 @@ public interface MainMvpPresenter <MvpView extends BaseMvpView> extends BaseMvpP
     void loadImagesItemListInBucket(Context context, String findDirName);
 
     void switchAdapter(RecyclerView.Adapter<ViewHolder> recyclerViewAdapter);
+
+    void setImageAdapterModel(AdapterContract.Model adapterModel);
+
+    void setImageAdapterView(AdapterContract.View adapterView);
 }

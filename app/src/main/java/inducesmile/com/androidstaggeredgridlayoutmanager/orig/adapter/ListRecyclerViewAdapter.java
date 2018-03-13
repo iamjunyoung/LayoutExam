@@ -15,10 +15,6 @@ import java.util.List;
 
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.ItemTouchHelperListener;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.R;
-import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.model.ListDataModel;
-import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.model.SolventDataModel;
-import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.view.ListAdapterView;
-import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.view.SolventAdapterView;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.datas.ItemObjects;
 
 /**
@@ -26,7 +22,7 @@ import inducesmile.com.androidstaggeredgridlayoutmanager.orig.datas.ItemObjects;
  */
 
 public class ListRecyclerViewAdapter  extends RecyclerView.Adapter<ViewHolder>
-        implements ListDataModel, ListAdapterView, ItemTouchHelperListener {
+        implements AdapterContract.Model, AdapterContract.View, ItemTouchHelperListener {
     public static final int VIEW_TYPE_NORMAL = 0;
     public static final int VIEW_TYPE_FIRST = 1;
 
@@ -89,36 +85,6 @@ public class ListRecyclerViewAdapter  extends RecyclerView.Adapter<ViewHolder>
         return this.itemList.size();
     }
 
-    /////////
-    // For MVP
-    ////////
-
-    @Override
-    public void add(ItemObjects itemObjects) {
-
-    }
-
-    @Override
-    public ItemObjects remove(int position) {
-        return null;
-    }
-
-    @Override
-    public ItemObjects getPhoto(int position) {
-        return null;
-    }
-
-    //public void addItems(List<ItemObjects> list) {
-    public void addItems(List<ItemObjects> list) {
-        itemList.addAll(list);
-        notifyDataSetChanged();
-    }
-
-    @Override
-    public int getSize() {
-        return 0;
-    }
-
     void update(int itemId) {
         int position = -1;
         for (int i = 0; i < itemList.size(); i++) {
@@ -141,7 +107,7 @@ public class ListRecyclerViewAdapter  extends RecyclerView.Adapter<ViewHolder>
         notifyItemRemoved(itemList.indexOf(itemObjects));
     }
 
-    void clear() {
+    public void clear() {
         itemList.clear();
         notifyDataSetChanged();
     }
@@ -194,7 +160,47 @@ public class ListRecyclerViewAdapter  extends RecyclerView.Adapter<ViewHolder>
     }
 
     @Override
-    public void refresh() {
+    public void add(ItemObjects itemObjects) {
+
+    }
+
+    @Override
+    public ItemObjects remove(int position) {
+        return null;
+    }
+
+    @Override
+    public ItemObjects getPhoto(int position) {
+        return null;
+    }
+
+    @Override
+    public void addItems(List<ItemObjects> list) {
+
+    }
+
+    @Override
+    public int getSize() {
+        return 0;
+    }
+
+    @Override
+    public void refreshItemList() {
+
+    }
+
+    @Override
+    public void refreshItemAdded() {
+
+    }
+
+    @Override
+    public void refreshItemRemoved() {
+
+    }
+
+    @Override
+    public void refreshItemChanged() {
 
     }
 }
