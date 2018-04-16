@@ -138,7 +138,8 @@ public class SolventRecyclerViewAdapter  extends RecyclerView.Adapter<ViewHolder
 
     @Override
     public void addItems(List<ItemObjects> list) {
-
+        itemList.addAll(list);
+        notifyDataSetChanged();
     }
 
     @Override
