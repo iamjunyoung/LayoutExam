@@ -62,10 +62,10 @@ public class SolventRecyclerViewAdapter  extends RecyclerView.Adapter<ViewHolder
         View view = LayoutInflater.from(context).inflate(resId, parent, false);
 
         if (viewType == VIEW_TYPE_NORMAL) {
-            Log.i("gggg", "hi ");
+            Log.i("JYN", "hi ");
             return new SolventViewHolders(view);
         } else {
-            Log.i("gggg", "hi FirstItemViewHolders ");
+            Log.i("JYN", "hi FirstItemViewHolders ");
             return new FirstItemViewHolders(view);
         }
 
@@ -89,7 +89,7 @@ public class SolventRecyclerViewAdapter  extends RecyclerView.Adapter<ViewHolder
 
         if (holder instanceof SolventViewHolders) {
             if (((SolventViewHolders) holder).countryPhoto == null) {
-                Log.i("gggg", "hi countryPhoto ");
+                Log.i("JYN", "hi countryPhoto ");
             }
             /*
             Glide.with(context)
@@ -138,8 +138,9 @@ public class SolventRecyclerViewAdapter  extends RecyclerView.Adapter<ViewHolder
 
     @Override
     public void addItems(List<ItemObjects> list) {
+        Log.i("JYN", "[SolventRecyclerViewAdapter][addItems]. list : " + list);
         itemList.addAll(list);
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
     }
 
     @Override
@@ -149,7 +150,8 @@ public class SolventRecyclerViewAdapter  extends RecyclerView.Adapter<ViewHolder
     //////////////////////////////////////////////////
     @Override
     public void refreshItemList() {
-
+        Log.i("JYN", "[SolventRecyclerViewAdapter][refreshItemList]" );
+        notifyDataSetChanged();
     }
 
     @Override

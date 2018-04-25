@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ import inducesmile.com.androidstaggeredgridlayoutmanager.orig.R;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.SolventRecyclerViewAdapter;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.GridRecyclerViewAdapter;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.ListRecyclerViewAdapter;
+import inducesmile.com.androidstaggeredgridlayoutmanager.orig.adapter.ViewHolder;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.common.BaseActivity;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.datas.BucketItemObject;
 import inducesmile.com.androidstaggeredgridlayoutmanager.orig.datas.ItemObjects;
@@ -42,6 +44,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, ItemListe
     // adapter 추가
     private ListRecyclerViewAdapter lrAdapter;
     private GridRecyclerViewAdapter grAdapter;
+
+    RecyclerView.Adapter<ViewHolder> adapter;
 
     //Bucket용 adapter추가
     private BucketItemRecyclerViewAdapter bucketAdapter;
@@ -75,13 +79,13 @@ public class MainActivity extends BaseActivity implements MainMvpView, ItemListe
 
         emptyView = findViewById(R.id.tv_activity_main_empty);
 
-
         gaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
         gaggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         gaggeredGridLayoutManager.invalidateSpanAssignments();
         recyclerView.setLayoutManager(gaggeredGridLayoutManager);
 
         //List<ItemObjects> gaggeredList = getListItemData();
+
         rcAdapter = new SolventRecyclerViewAdapter(this);
         recyclerView.setAdapter(rcAdapter);
 
@@ -224,6 +228,9 @@ public class MainActivity extends BaseActivity implements MainMvpView, ItemListe
                 lrAdapter = new ListRecyclerViewAdapter(this);
                 recyclerView.setAdapter(lrAdapter);
 
+                presenter.setImageAdapterModel(lrAdapter);
+                presenter.setImageAdapterView(lrAdapter);
+
                 layoutManager = new ItemLayoutManger(this);
                 iconInToolbar = R.drawable.ic_list_24dp;
                 viewType = "From Staggered to List";
@@ -237,6 +244,9 @@ public class MainActivity extends BaseActivity implements MainMvpView, ItemListe
                 //즉. Presenter.java쪽에 switchAdapter() 등의 메서드가 추가되어야 하지 않을까??
                 recyclerView.setAdapter(grAdapter);
 
+                presenter.setImageAdapterModel(grAdapter);
+                presenter.setImageAdapterView(grAdapter);
+
                 layoutManager = new GridLayoutManager(this, 2);
                 iconInToolbar = R.drawable.ic_grid_24dp;
                 viewType = "From List to Grid";
@@ -247,6 +257,9 @@ public class MainActivity extends BaseActivity implements MainMvpView, ItemListe
                 //Solvent adpater필요
                 rcAdapter = new SolventRecyclerViewAdapter(this);
                 recyclerView.setAdapter(rcAdapter);
+
+                presenter.setImageAdapterModel(rcAdapter);
+                presenter.setImageAdapterView(rcAdapter);
 
                 StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
                 staggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
@@ -260,6 +273,9 @@ public class MainActivity extends BaseActivity implements MainMvpView, ItemListe
                 rcAdapter = new SolventRecyclerViewAdapter(this);
                 recyclerView.setAdapter(rcAdapter);
 
+                presenter.setImageAdapterModel(rcAdapter);
+                presenter.setImageAdapterView(rcAdapter);
+
                 StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
                 staggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
                 layoutManager = staggeredGridLayoutManager;
@@ -269,6 +285,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, ItemListe
             item.setIcon(iconInToolbar);
 
             presenter.createSamples();
+            Log.i("JYN", "[MainActivity][onOptionsItemSelected]. pos createSamples and loadItemList");
             presenter.loadItemList();
 
             //rcAdapter.notifyDataSetChanged();
@@ -301,20 +318,20 @@ public class MainActivity extends BaseActivity implements MainMvpView, ItemListe
     public void onUpdateItemList(List<ItemObjects> itemList) {
         String viewType = null;
         if (recyclerViewLayoutType == LAYOUT_TYPE_STAGGERED) {
-            rcAdapter.clear();
-            rcAdapter.addItems(itemList);
+            //rcAdapter.clear();
+            //rcAdapter.addItems(itemList);
             viewType = "From Staggered to List";
         } else if (recyclerViewLayoutType == LAYOUT_TYPE_LIST) {
-            lrAdapter.clear();
-            lrAdapter.addItems(itemList);
+            //lrAdapter.clear();
+            //lrAdapter.addItems(itemList);
             viewType = "From List to Grid";
         } else if (recyclerViewLayoutType == LAYOUT_TYPE_GRID) {
-            grAdapter.clear();
-            grAdapter.addItems(itemList);
+            //grAdapter.clear();
+            //grAdapter.addItems(itemList);
             viewType = "From Grid to Staggered";
         } else {
-            rcAdapter.clear();
-            rcAdapter.addItems(itemList);
+            //rcAdapter.clear();
+            //rcAdapter.addItems(itemList);
             viewType = "[else] ... to Staggered";
         }
 

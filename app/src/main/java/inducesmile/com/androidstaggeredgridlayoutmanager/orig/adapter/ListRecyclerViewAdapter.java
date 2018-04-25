@@ -177,7 +177,7 @@ public class ListRecyclerViewAdapter  extends RecyclerView.Adapter<ViewHolder>
     @Override
     public void addItems(List<ItemObjects> list) {
         itemList.addAll(list);
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
     }
 
     @Override
@@ -187,7 +187,7 @@ public class ListRecyclerViewAdapter  extends RecyclerView.Adapter<ViewHolder>
 
     @Override
     public void refreshItemList() {
-
+        notifyDataSetChanged();
     }
 
     @Override

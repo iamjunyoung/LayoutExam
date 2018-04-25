@@ -104,10 +104,9 @@ public class GridRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder>
         return null;
     }
 
-    //public void addItems(List<ItemObjects> list) {
     public void addItems(List<ItemObjects> list) {
         itemList.addAll(list);
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
     }
 
     @Override
@@ -192,7 +191,7 @@ public class GridRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder>
 
     @Override
     public void refreshItemList() {
-
+        notifyDataSetChanged();
     }
 
     @Override

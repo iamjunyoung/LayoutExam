@@ -2,6 +2,7 @@ package inducesmile.com.androidstaggeredgridlayoutmanager.orig.ui.main;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -17,6 +18,8 @@ import inducesmile.com.androidstaggeredgridlayoutmanager.orig.singletons.ItemMan
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.subjects.PublishSubject;
+
+import static inducesmile.com.androidstaggeredgridlayoutmanager.orig.data.BucketData.TAG;
 
 /**
  * Created by junyoung on 2017. 10. 2..
@@ -91,10 +94,18 @@ public class MainMvpPresenterImpl <MvpView extends BaseMvpView> extends RxPresen
 
     @Override
     public void loadItemList() {
-        List<ItemObjects> itemList = ItemManager.getItemData();
+        List<ItemObjects> itemList = ItemManager.getItemData();   // 1. Model
         if (null != itemList && itemList.isEmpty()) {
+            Log.i("JYN", "[MainMvpPresenterImpl][loadItemList] showEmtpyView : " + itemList);
+
             view.showEmtpyView();
         } else {
+            // 2. AdapterModel
+            Log.i("JYN", "[MainMvpPresenterImpl][loadItemList] addItems : " + itemList);
+            adapterModel.addItems(itemList);
+            // 3. AdapterView
+            adapterView.refreshItemList();
+            // 4. Veiw
             view.onUpdateItemList(itemList); // --> 이후 onUpdateItemList 에서는 rcAdapter.addItems(itemList);를 해주게 됨.
 
         }

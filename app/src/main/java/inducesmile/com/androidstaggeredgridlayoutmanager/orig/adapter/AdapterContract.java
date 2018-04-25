@@ -8,7 +8,7 @@ import inducesmile.com.androidstaggeredgridlayoutmanager.orig.datas.ItemObjects;
  * Created by junyoung on 2018. 3. 13..
  */
 
-public interface AdapterContract {
+public interface AdapterContract{
     interface Model {
         void add(ItemObjects itemObjects);
         ItemObjects remove(int position);
